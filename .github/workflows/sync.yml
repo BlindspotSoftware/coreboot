@@ -1,0 +1,18 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '50 * * * *' # every hour
+  workflow_dispatch: # on button click
+jobs:
+  Sync-Fork:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: tgymnich/fork-sync@v1.8
+        with:
+          base: prodrive/hermes
+          head: main
+          ignore_fail: true
+          merge_method: rebase
