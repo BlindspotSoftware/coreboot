@@ -44,8 +44,6 @@ chip soc/intel/skylake
 	register "SataPortsDevSlp[2]" = "1"
 	register "DspEnable" = "0"
 	register "IoBufferOwnership" = "0"
-	register "SsicPortEnable" = "0"
-	register "ScsEmmcHs400Enabled" = "0"
 	register "SkipExtGfxScan" = "1"
 	register "SaGv" = "SaGv_Enabled"
 	register "PmConfigSlpS3MinAssert" = "2"		# 50ms
@@ -100,7 +98,6 @@ chip soc/intel/skylake
 	# Send an extra VR mailbox command for the PS4 exit issue
 	register "SendVrMbxCmd" = "2"
 
-	device cpu_cluster 0 on end
 	device domain 0 on
 		device ref igpu		on  end
 		device ref sa_thermal	on  end

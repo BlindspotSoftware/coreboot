@@ -40,10 +40,8 @@ chip soc/intel/skylake
 	register "s0ix_enable" = true
 
 	# FSP Configuration
-	register "SataSalpSupport" = "0"
 	register "DspEnable" = "1"
 	register "IoBufferOwnership" = "3"
-	register "SsicPortEnable" = "0"
 	register "ScsEmmcHs400Enabled" = "1"
 	register "SkipExtGfxScan" = "1"
 	register "SaGv" = "SaGv_Enabled"
@@ -273,7 +271,6 @@ chip soc/intel/skylake
 		.psys_pmax = 101,
 	}"
 
-	device cpu_cluster 0 on end
 	device domain 0 on
 		device ref system_agent		on  end
 		device ref igpu			on  end
