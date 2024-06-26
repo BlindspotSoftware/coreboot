@@ -34,15 +34,10 @@ chip soc/intel/skylake
 	register "gpe0_dw1" = "GPP_D"
 	register "gpe0_dw2" = "GPP_E"
 
-	# EC host command ranges are in 0x380-0x383 & 0x80-0x8f
-	register "gen1_dec" = "0x00000381"
-
 	# Disable DPTF
 	register "dptf_enable" = "0"
 
 	# FSP Configuration
-	register "SataPortsEnable[0]" = "1"
-	register "SataPortsEnable[2]" = "1"
 	register "DspEnable" = "0"
 	register "IoBufferOwnership" = "0"
 	register "SkipExtGfxScan" = "1"
@@ -51,9 +46,6 @@ chip soc/intel/skylake
 	register "PmConfigSlpS4MinAssert" = "1"		# 1s
 	register "PmConfigSlpSusMinAssert" = "3"	# 500ms
 	register "PmConfigSlpAMinAssert" = "3"		# 2s
-
-	# EC/KBC requires continuous mode
-	register "serirq_mode" = "SERIRQ_CONTINUOUS"
 
 	# VR Settings Configuration for 4 Domains
 	#+----------------+-----------+-----------+-------------+----------+
@@ -149,10 +141,20 @@ chip soc/intel/skylake
 		device ref south_xhci	on  end
 		device ref south_xdci	on  end
 		device ref thermal	on  end
-		device ref sata		on  end
+		device ref sata		on
+			register "SataPortsEnable" = "{
+				[0] = 1,
+				[2] = 1,
+			}"
+		end
 		device ref pcie_rp5	on  end
 		device ref pcie_rp9	on  end
 		device ref lpc_espi	on
+			# EC/KBC requires continuous mode
+			register "serirq_mode" = "SERIRQ_CONTINUOUS"
+
+			# EC host command ranges are in 0x380-0x383 & 0x80-0x8f
+			register "gen1_dec" = "0x00000381"
 			chip drivers/pc80/tpm
 				device pnp 0c31.0 on end
 			end

@@ -27,12 +27,6 @@ chip soc/intel/skylake
 	register "gpe0_dw1" = "GPP_D"
 	register "gpe0_dw2" = "GPP_E"
 
-	# EC host command ranges are in 0x800-0x8ff & 0x200-0x20f
-	register "gen1_dec" = "0x00fc0801"
-	register "gen2_dec" = "0x000c0201"
-	# EC memory map range is 0x900-0x9ff
-	register "gen3_dec" = "0x00fc0901"
-
 	# Enable DPTF
 	register "dptf_enable" = "1"
 
@@ -147,18 +141,6 @@ chip soc/intel/skylake
 	register "PcieRpAdvancedErrorReporting[0]" = "1"
 	# RP 1, Enable Latency Tolerance Reporting Mechanism
 	register "PcieRpLtrEnable[0]" = "1"
-
-	register "usb2_ports[0]" = "USB2_PORT_LONG(OC1)"	# Type-C Port 1
-	register "usb2_ports[1]" = "USB2_PORT_SHORT(OC2)"	# Type-A Port
-	register "usb2_ports[2]" = "USB2_PORT_SHORT(OC_SKIP)"	# Bluetooth
-	register "usb2_ports[4]" = "USB2_PORT_LONG(OC0)"	# Type-C Port 2
-	register "usb2_ports[6]" = "USB2_PORT_SHORT(OC_SKIP)"	# H1
-	register "usb2_ports[8]" = "USB2_PORT_SHORT(OC_SKIP)"	# Camera
-
-	register "usb3_ports[0]" = "USB3_PORT_DEFAULT(OC1)"	# Type-C Port 1
-	register "usb3_ports[1]" = "USB3_PORT_DEFAULT(OC0)"	# Type-C Port 2
-	register "usb3_ports[2]" = "USB3_PORT_DEFAULT(OC2)"	# Type-A Port
-	register "usb3_ports[3]" = "USB3_PORT_DEFAULT(OC_SKIP)"	# LTE module
 
 	# Intel Common SoC Config
 	#+-------------------+---------------------------+
@@ -282,7 +264,23 @@ chip soc/intel/skylake
 		device ref igpu 		on  end
 		device ref sa_thermal 		on  end
 		device ref imgu 		on  end
-		device ref south_xhci 		on  end
+		device ref south_xhci 		on
+			register "usb2_ports" = "{
+				[0] = USB2_PORT_LONG(OC1),	// Type-C Port 1
+				[1] = USB2_PORT_SHORT(OC2),	// Type-A Port
+				[2] = USB2_PORT_SHORT(OC_SKIP),	// Bluetooth
+				[4] = USB2_PORT_LONG(OC0),	// Type-C Port 2
+				[6] = USB2_PORT_SHORT(OC_SKIP),	// H1
+				[8] = USB2_PORT_SHORT(OC_SKIP),	// Camera
+			}"
+
+			register "usb3_ports" = "{
+				[0] = USB3_PORT_DEFAULT(OC1),		// Type-C Port 1
+				[1] = USB3_PORT_DEFAULT(OC0),		// Type-C Port 2
+				[2] = USB3_PORT_DEFAULT(OC2),		// Type-A Port
+				[3] = USB3_PORT_DEFAULT(OC_SKIP),	// LTE module
+			}"
+		end
 		device ref south_xdci 		on  end
 		device ref thermal 		on  end
 		device ref cio 			on  end
@@ -406,6 +404,12 @@ chip soc/intel/skylake
 		device ref sdio 		off end
 		device ref sdxc 		on  end
 		device ref lpc_espi 		on
+			# EC host command ranges are in 0x800-0x8ff & 0x200-0x20f
+			register "gen1_dec" = "0x00fc0801"
+			register "gen2_dec" = "0x000c0201"
+			# EC memory map range is 0x900-0x9ff
+			register "gen3_dec" = "0x00fc0901"
+
 			chip ec/google/chromeec
 				device pnp 0c09.0 on end
 			end

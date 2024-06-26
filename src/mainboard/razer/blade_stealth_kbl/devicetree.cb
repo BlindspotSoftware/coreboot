@@ -15,9 +15,6 @@ chip soc/intel/skylake
 	register "gpe0_dw1" = "GPP_D"
 	register "gpe0_dw2" = "GPP_E"
 
-	register "gen1_dec" = "0x000c0681"
-	register "gen2_dec" = "0x000c1641"
-
 	# Disable DPTF
 	register "dptf_enable" = "0"
 
@@ -30,8 +27,6 @@ chip soc/intel/skylake
 	register "PmConfigSlpS4MinAssert" = "1"		# 1s
 	register "PmConfigSlpSusMinAssert" = "3"	# 500ms
 	register "PmConfigSlpAMinAssert" = "3"		# 2s
-
-	register "serirq_mode" = "SERIRQ_CONTINUOUS"
 
 	# VR Settings Configuration for 4 Domains
 	#+----------------+-----------+-----------+-------------+----------+
@@ -175,6 +170,11 @@ chip soc/intel/skylake
 		device ref pcie_rp5	on  end
 		device ref pcie_rp9	on  end
 		device ref lpc_espi	on
+			register "serirq_mode" = "SERIRQ_CONTINUOUS"
+
+			register "gen1_dec" = "0x000c0681"
+			register "gen2_dec" = "0x000c1641"
+
 			chip superio/ite/it8528e
 				device pnp 6e.1 off end
 				device pnp 6e.2 off end

@@ -27,12 +27,6 @@ chip soc/intel/skylake
 	register "gpe0_dw1" = "GPP_B"
 	register "gpe0_dw2" = "GPP_E"
 
-	# EC host command ranges are in 0x800-0x8ff & 0x200-0x20f
-	register "gen1_dec" = "0x00fc0801"
-	register "gen2_dec" = "0x000c0201"
-	# EC memory map range is 0x900-0x9ff
-	register "gen3_dec" = "0x00fc0901"
-
 	# Enable DPTF
 	register "dptf_enable" = "1"
 
@@ -140,15 +134,6 @@ chip soc/intel/skylake
 	register "PcieRpAdvancedErrorReporting[0]" = "1"
 	register "PcieRpLtrEnable[0]" = "1"
 
-	# USB 2.0
-	register "usb2_ports[0]" = "USB2_PORT_LONG(OC0)"	# Type-C Port 1
-	register "usb2_ports[2]" = "USB2_PORT_SHORT(OC_SKIP)"	# Bluetooth
-	register "usb2_ports[4]" = "USB2_PORT_LONG(OC1)"	# Type-C Port 2
-
-	# USB 3.0
-	register "usb3_ports[0]" = "USB3_PORT_DEFAULT(OC0)"	# Type-C Port 1
-	register "usb3_ports[1]" = "USB3_PORT_DEFAULT(OC1)"	# Type-C Port 2
-
 	# Intel Common SoC Config
 	#+-------------------+---------------------------+
 	#| Field             |  Value                    |
@@ -231,6 +216,17 @@ chip soc/intel/skylake
 		device ref imgu			on  end
 		device ref ish			off end
 		device ref south_xhci		on
+			register "usb2_ports" = "{
+				[0] = USB2_PORT_LONG(OC0),	// Type-C Port 1
+				[2] = USB2_PORT_SHORT(OC_SKIP),	// Bluetooth
+				[4] = USB2_PORT_LONG(OC1),	// Type-C Port 2
+			}"
+
+			register "usb3_ports" = "{
+				[0] = USB3_PORT_DEFAULT(OC0),	// Type-C Port 1
+				[1] = USB3_PORT_DEFAULT(OC1),	// Type-C Port 2
+			}"
+
 			chip drivers/usb/acpi
 				register "desc" = ""Root Hub""
 				register "type" = "UPC_TYPE_HUB"
@@ -361,6 +357,12 @@ chip soc/intel/skylake
 		device ref sdio 		off end
 		device ref sdxc 		off end
 		device ref lpc_espi		on
+			# EC host command ranges are in 0x800-0x8ff & 0x200-0x20f
+			register "gen1_dec" = "0x00fc0801"
+			register "gen2_dec" = "0x000c0201"
+			# EC memory map range is 0x900-0x9ff
+			register "gen3_dec" = "0x00fc0901"
+
 			chip ec/google/chromeec
 				device pnp 0c09.0 on end
 			end
