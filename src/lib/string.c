@@ -71,7 +71,7 @@ char *strrchr(const char *s, int c)
 	return p;
 }
 
-char *strncpy(char *to, const char *from, int count)
+char *strncpy(char *to, const char *from, size_t count)
 {
 	char *ret = to;
 	char data;
@@ -113,9 +113,9 @@ int strcmp(const char *s1, const char *s2)
 	return r;
 }
 
-int strncmp(const char *s1, const char *s2, int maxlen)
+int strncmp(const char *s1, const char *s2, size_t maxlen)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < maxlen; i++) {
 		if ((s1[i] != s2[i]) || (s1[i] == '\0'))
@@ -125,9 +125,9 @@ int strncmp(const char *s1, const char *s2, int maxlen)
 	return 0;
 }
 
-int strspn(const char *str, const char *spn)
+size_t strspn(const char *str, const char *spn)
 {
-	int ret = 0;
+	size_t ret = 0;
 
 	while (*str != 0) {
 		const char *p;
@@ -140,9 +140,9 @@ int strspn(const char *str, const char *spn)
 	return ret;
 }
 
-int strcspn(const char *str, const char *spn)
+size_t strcspn(const char *str, const char *spn)
 {
-	int ret = 0;
+	size_t ret = 0;
 
 	while (*str != 0) {
 		const char *p;
