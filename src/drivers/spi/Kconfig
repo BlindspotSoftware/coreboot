@@ -189,6 +189,17 @@ config SPI_FLASH_FORCE_4_BYTE_ADDR_MODE
 	  On some platforms with SPI flashes larger than 16MB, the SPI flash may need
 	  to remain in 4-byte addressing mode.
 
+config SPI_FLASH_SFDP
+	bool
+	help
+	  Include serial flash discoverable parameters (SFDP) support.
+
+config SPI_FLASH_RPMC
+	bool
+	select SPI_FLASH_SFDP
+	help
+	  Include replay-protected monotonic counter (RPMC) support.
+
 endif # SPI_FLASH
 
 config HAVE_EM100PRO_SPI_CONSOLE_SUPPORT

@@ -95,6 +95,14 @@ struct spi_flash_protection_ops {
 
 struct spi_flash_part_id;
 
+struct spi_flash_rpmc_cap {
+	bool rpmc_available;
+	bool poll_op2_ext_stat;
+	unsigned int number_of_counters;
+	uint8_t op1_write_cmd;
+	uint8_t op2_read_cmd;
+};
+
 struct spi_flash {
 	struct spi_slave spi;
 	u8 vendor;
@@ -118,6 +126,7 @@ struct spi_flash {
 	/* If !NULL all protection callbacks exist. */
 	const struct spi_flash_protection_ops *prot_ops;
 	const struct spi_flash_part_id *part;
+	struct spi_flash_rpmc_cap rpmc_caps;
 };
 
 void lb_spi_flash(struct lb_header *header);
@@ -248,5 +257,8 @@ int spi_flash_vector_helper(const struct spi_slave *slave,
  * Returns number of windows added to the table.
  */
 uint32_t spi_flash_get_mmap_windows(struct flash_mmap_window *table);
+
+/* Print the SFDP headers read from the SPI flash */
+void spi_flash_print_sfdp_headers(const struct spi_flash *flash);
 
 #endif /* _SPI_FLASH_H_ */
