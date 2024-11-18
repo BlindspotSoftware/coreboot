@@ -1,22 +1,25 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
+#include <assert.h>
 #include <console/console.h>
 #include <console/debug.h>
-#include <intelblocks/cpulib.h>
 #include <cpu/cpu.h>
 #include <cpu/intel/cpu_ids.h>
 #include <cpu/x86/mtrr.h>
 #include <cpu/x86/mp.h>
+#include <cpu/intel/microcode.h>
 #include <cpu/intel/turbo.h>
+#include <cpu/intel/smm_reloc.h>
+#include <cpu/intel/em64t101_save_state.h>
+#include <intelblocks/cpulib.h>
+#include <intelpch/lockdown.h>
 #include <soc/msr.h>
+#include <soc/pm.h>
 #include <soc/soc_util.h>
 #include <soc/smmrelocate.h>
 #include <soc/util.h>
-#include <assert.h>
-#include "chip.h"
-#include <cpu/intel/smm_reloc.h>
-#include <cpu/intel/em64t101_save_state.h>
 #include <types.h>
+#include "chip.h"
 
 static const config_t *chip_config = NULL;
 
@@ -53,6 +56,23 @@ static void xeon_configure_mca(void)
 	   of these banks are core vs package scope. For now every CPU clears
 	   every bank. */
 	mca_configure();
+}
+
+/*
+ * By providing a pointer to the microcode MPinit will update the MCU
+ * when necessary and skip the update if microcode already has been loaded.
+ *
+ * When FSP-S is provided with UPD PcdCpuMicrocodePatchBase it will update
+ * the microcode. Since coreboot is able to do the same, don't set the UPD
+ * and let coreboot handle microcode updates.
+ *
+ * FSP-S updates microcodes serialized, so do the same.
+ *
+ */
+static void get_microcode_info(const void **microcode, int *parallel)
+{
+	*microcode = intel_microcode_find();
+	*parallel = 0;
 }
 
 static void xeon_sp_core_init(struct device *cpu)
@@ -162,8 +182,6 @@ static const struct cpu_driver driver __cpu_driver = {
 	.id_table = cpu_table,
 };
 
-#define CPU_BCLK 100
-
 static void set_max_turbo_freq(void)
 {
 	msr_t msr, perf_ctl;
@@ -187,7 +205,7 @@ static void set_max_turbo_freq(void)
 	wrmsr(IA32_PERF_CTL, perf_ctl);
 
 	printk(BIOS_DEBUG, "cpu: frequency set to %d\n",
-	       ((perf_ctl.lo >> 8) & 0xff) * CPU_BCLK);
+	       ((perf_ctl.lo >> 8) & 0xff) * CONFIG_CPU_BCLK_MHZ);
 	FUNC_EXIT();
 }
 
@@ -211,16 +229,15 @@ static void post_mp_init(void)
 	/* Set Max Ratio */
 	set_max_turbo_freq();
 
-	if (CONFIG(HAVE_SMI_HANDLER))
+	if (CONFIG(HAVE_SMI_HANDLER)) {
 		global_smi_enable();
+		if (get_lockdown_config() == CHIPSET_LOCKDOWN_COREBOOT)
+			pmc_lock_smi();
+	}
 }
 
 /*
  * CPU initialization recipe
- *
- * Note that no microcode update is passed to the init function. CSE updates
- * the microcode on all cores before releasing them from reset. That means that
- * the BSP and all APs will come up with the same microcode revision.
  */
 static const struct mp_ops mp_ops = {
 	.pre_mp_init = pre_mp_init,
@@ -228,12 +245,20 @@ static const struct mp_ops mp_ops = {
 	.get_smm_info = get_smm_info,
 	.pre_mp_smm_init = smm_southbridge_clear_state,
 	.relocation_handler = smm_relocation_handler,
+	.get_microcode_info = get_microcode_info,
 	.post_mp_init = post_mp_init,
 };
 
 void mp_init_cpus(struct bus *bus)
 {
 	FUNC_ENTER();
+
+	const void *microcode_patch = intel_microcode_find();
+
+	if (!microcode_patch)
+		printk(BIOS_ERR, "microcode not found in CBFS!\n");
+
+	intel_microcode_load_unlocked(microcode_patch);
 
 	/*
 	 * This gets used in cpu device callback. Other than cpu 0,
