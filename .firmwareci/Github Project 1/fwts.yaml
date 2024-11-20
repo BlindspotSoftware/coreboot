@@ -1,0 +1,73 @@
+name: FWTS Test
+description: This test runs the Firmware Testsuite and returns a report.
+
+defaults:
+  hwaas: &hwaas_parameter
+    host: "[[.HwaaSHost]]"
+    context_id: "[[.ContextID]]"
+    device_id: "[[.DeviceID]]"
+    machine_id: "[[.MachineID]]"
+    version: "[[.Version]]"
+    image: "[[.DefaultImage]]"
+
+stages:
+  - name: Pre-Requirement
+    steps:
+      - cmd: hwaas
+        name: Read backup image from flash
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [read, /tmp/oldfirmware.bin]
+
+      - cmd: hwaas
+        name: Flash binary
+        options:
+          timeout: 60m
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [write, /tmp/firmware.bin]
+
+  - name: Firmware Testsuite
+    steps:
+      - cmd: hwaas
+        name: Power on DUT
+        options:
+          timeout: 20m
+        parameters:
+          <<: *hwaas_parameter
+          command: power
+          args: ["on"]
+
+      - cmd: ping
+        name: Wait for SSH serviceasdadada
+        options:
+          timeout: 2m
+        parameters:
+          host: "[[.Host]]"
+
+      - cmd: fwts
+        name: Run Firmware Testsuite tests
+        options:
+          timeout: 10m
+        transport:
+          proto: ssh
+          options:
+            host: "[[.Host]]"
+            user: root
+            identity_file: /root/.ssh/fwci
+        parameters:
+          flags: [-b]
+          report_only: true
+
+  - name: Post-Requirement
+    steps:
+      - cmd: hwaas
+        name: Write backup image to flash
+        options:
+          timeout: 60m
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [write, /tmp/oldfirmware.bin]

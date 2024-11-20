@@ -1,0 +1,59 @@
+name: Boot Test
+description: This test is a simple boot test.
+
+defaults:
+  hwaas: &hwaas_parameter
+    host: "[[.HwaaSHost]]"
+    context_id: "[[.ContextID]]"
+    device_id: "[[.DeviceID]]"
+    machine_id: "[[.MachineID]]"
+    version: "[[.Version]]"
+    image: "[[.DefaultImage]]"
+
+stages:
+  - name: Pre-Requirement
+    steps:
+      - cmd: hwaas
+        name: Read backup image from flash
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [read, /tmp/oldfirmware.bin]
+
+      - cmd: hwaas
+        name: Flash binary
+        options:
+          timeout: 60m
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [write, /tmp/firmware.bin]
+
+  - name: Run Boot Test
+    steps:
+      - cmd: hwaas
+        name: Power on DUT
+        options:
+          timeout: 20m
+        parameters:
+          <<: *hwaas_parameter
+          command: power
+          args: ["on"]
+
+      - cmd: ping
+        name: Wait for SSH service
+        options:
+          timeout: 2m
+        parameters:
+          host: "[[.Host]]"
+
+  - name: Post-Requirement
+    steps:
+      - cmd: hwaas
+        name: Write backup image to flash
+        options:
+          timeout: 60m
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [write, /tmp/oldfirmware.bin]

@@ -1,0 +1,12 @@
+name: Binarly Scan
+description: Test the firmware with Binarly
+
+stages:
+  - name: Binarly Scan
+    steps:
+      - cmd: binarly report
+        name: Binarly Scan
+        parameters:
+          url: "[[.BinarlyURL]]"
+          token: "[[.BinarlyToken]]"
+          file_path: "[[.Binary]]"

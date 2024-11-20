@@ -1,0 +1,107 @@
+name: PCI Info Test
+description: This test runs lscpi with different flags.
+
+defaults:
+  hwaas: &hwaas_parameter
+    host: "[[.HwaaSHost]]"
+    context_id: "[[.ContextID]]"
+    device_id: "[[.DeviceID]]"
+    machine_id: "[[.MachineID]]"
+    version: "[[.Version]]"
+    image: "[[.DefaultImage]]"
+
+  transport: &transport
+    proto: ssh
+    options:
+      host: "[[.Host]]"
+      user: root
+      identity_file: /root/.ssh/fwci
+
+stages:
+  - name: Pre-Requirement
+    steps:
+      - cmd: hwaas
+        name: Read backup image from flash
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [read, /tmp/oldfirmware.bin]
+
+      - cmd: hwaas
+        name: Flash binary
+        options:
+          timeout: 60m
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [write, /tmp/firmware.bin]
+
+  - name: lspci Tests
+    steps:
+      - cmd: hwaas
+        name: Power on DUT
+        options:
+          timeout: 20m
+        parameters:
+          <<: *hwaas_parameter
+          command: power
+          args: ["on"]
+
+      - cmd: ping
+        name: Wait for SSH service
+        options:
+          timeout: 2m
+        parameters:
+          host: "[[.Host]]"
+
+      - cmd: cmd
+        name: lspci
+        transport: *transport
+        parameters:
+          executable: lspci
+
+      - cmd: cmd
+        name: lspci -t
+        transport: *transport
+        parameters:
+          executable: lspci
+          args: [-t]
+
+      - cmd: cmd
+        name: lspci -vvvv
+        transport: *transport
+        parameters:
+          executable: lspci
+          args: ["-vvvv"]
+
+      - cmd: cmd
+        name: lspci -nn
+        transport: *transport
+        parameters:
+          executable: lspci
+          args: ["-nn"]
+
+      - cmd: cmd
+        name: lspci -xxxx
+        transport: *transport
+        parameters:
+          executable: lspci
+          args: [-xxxx]
+
+      - cmd: cmd
+        name: lspci -nnvvvvxxxx
+        transport: *transport
+        parameters:
+          executable: lspci
+          args: [-nnvvvvxxxx]
+
+  - name: Post-Requirement
+    steps:
+      - cmd: hwaas
+        name: Write backup image to flash
+        options:
+          timeout: 60m
+        parameters:
+          <<: *hwaas_parameter
+          command: flash
+          args: [write, /tmp/oldfirmware.bin]

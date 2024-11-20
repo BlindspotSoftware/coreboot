@@ -1,0 +1,10 @@
+name: FwHunt Test
+description: This test runs FWHunt-Scan with all FWHunt rules.
+
+stages:
+  - name: FwHunt Test
+    steps:
+      - cmd: fwhunt
+        name: Run FwHunt tests
+        parameters:
+          report_only: true
