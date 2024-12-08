@@ -3,4 +3,6 @@
 bootblock-y	+= ../car/cache_as_ram.S
 bootblock-y	+= ../../intel/car/bootblock.c
 
-postcar-y	+= ../car/exit_car.S
+romstage-y	+= ../../intel/car/romstage.c
+
+postcar-y	+= ../../intel/car/p4-netburst/exit_car.S

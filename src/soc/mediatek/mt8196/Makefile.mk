@@ -29,9 +29,12 @@ romstage-y += ../common/memory.c memory.c
 romstage-y += ../common/memory_test.c
 romstage-y += ../common/mmu_operations.c ../common/mmu_cmops.c
 
+ramstage-y += ../common/dpm_v2.c
+ramstage-y += dramc_info.c
 ramstage-y += ../common/early_init.c
 ramstage-y += ../common/emi.c
 ramstage-y += l2c_ops.c
+ramstage-y += ../common/mcu.c
 ramstage-y += ../common/mmu_operations.c ../common/mmu_cmops.c
 ramstage-$(CONFIG_PCI) += ../common/pcie.c pcie.c
 ramstage-y += soc.c
@@ -42,13 +45,23 @@ CPPFLAGS_common += -Isrc/soc/mediatek/common/include
 
 MT8196_BLOB_DIR := 3rdparty/blobs/soc/mediatek/mt8196
 
+mcu-firmware-files := \
+	$(CONFIG_DPM_DM_FIRMWARE) \
+	$(CONFIG_DPM_PM_FIRMWARE)
+
+$(foreach fw, $(call strip_quotes,$(mcu-firmware-files)), \
+	$(eval $(fw)-file := $(MT8196_BLOB_DIR)/$(fw)) \
+	$(eval $(fw)-type := raw) \
+	$(eval $(fw)-compression := LZ4) \
+	$(if $(wildcard $($(fw)-file)), $(eval cbfs-files-y += $(fw)), ) \
+)
+
 DRAM_CBFS := $(CONFIG_CBFS_PREFIX)/dram
 $(DRAM_CBFS)-file := $(MT8196_BLOB_DIR)/dram.elf
 $(DRAM_CBFS)-type := stage
 $(DRAM_CBFS)-compression := $(CBFS_PRERAM_COMPRESS_FLAG)
-ifneq ($(wildcard $($(DRAM_CBFS)-file)),)
-	cbfs-files-y += $(DRAM_CBFS)
-endif
+cbfs-files-y += $(DRAM_CBFS)
+
 $(objcbfs)/bootblock.bin: $(objcbfs)/bootblock.raw.bin
 	./util/mtkheader/gen-bl-img.py mt8196 sf $< $@
 
