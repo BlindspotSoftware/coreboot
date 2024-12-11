@@ -1,7 +1,7 @@
 name: Network Test (iPerf)
 description: Flash the provided firmware binary and test network interface
 
-tools:
+storage:
   - iperf_static
 
 defaults:
