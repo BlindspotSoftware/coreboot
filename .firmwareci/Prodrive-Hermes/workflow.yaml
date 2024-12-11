@@ -1,0 +1,2 @@
+description: Run tests on the Prodrive Hermes board.
+runs-on: prodrivehermes

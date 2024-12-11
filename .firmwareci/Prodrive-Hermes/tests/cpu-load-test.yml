@@ -1,7 +1,7 @@
 name: CPU Stress Test
 description: Run the CPU Stress Test on the device
 
-tools:
+storage:
   - system_suite
 
 defaults:

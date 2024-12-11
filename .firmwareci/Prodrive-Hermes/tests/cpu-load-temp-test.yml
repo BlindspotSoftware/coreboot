@@ -1,7 +1,7 @@
 name: CPU Temperature Test
 description: Run the CPU Stress Test on the device and check the temperature before and after the Stress Test
 
-tools:
+storage:
   - system_suite
 
 defaults:
