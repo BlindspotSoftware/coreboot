@@ -2,10 +2,22 @@
 
 #include <device/device.h>
 #include <device/pci.h>
+#include <soc/dramc_info.h>
 #include <soc/emi.h>
 #include <soc/mmu_operations.h>
 #include <soc/pcie.h>
+#include <soc/sspm.h>
+#include <soc/symbols.h>
 #include <symbols.h>
+
+void bootmem_platform_add_ranges(void)
+{
+	if (CONFIG(ARM64_BL31_OPTEE_WITH_SMC))
+		bootmem_add_range((uint64_t)_resv_mem_optee,
+				  REGION_SIZE(resv_mem_optee), BM_MEM_RESERVED);
+
+	reserve_buffer_for_dramc();
+}
 
 static void soc_read_resources(struct device *dev)
 {
@@ -15,6 +27,7 @@ static void soc_read_resources(struct device *dev)
 static void soc_init(struct device *dev)
 {
 	mtk_mmu_disable_l2c_sram();
+	sspm_init();
 }
 
 static struct device_operations soc_ops = {
