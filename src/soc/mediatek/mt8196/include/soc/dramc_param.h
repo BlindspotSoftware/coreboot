@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-#define DRAMC_PARAM_HEADER_VERSION 2
+#define DRAMC_PARAM_HEADER_VERSION 4
 
 struct sdram_params {
 	/* rank, cbt */

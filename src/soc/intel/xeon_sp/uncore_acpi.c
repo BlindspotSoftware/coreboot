@@ -84,9 +84,9 @@ static void acpi_fill_srat_memory(int *cnt, acpi_srat_mem_t *current,
 	addr = ((uint64_t)e->BaseAddress << MEM_ADDR_64MB_SHIFT_BITS);
 	size = ((uint64_t)e->ElementSize << MEM_ADDR_64MB_SHIFT_BITS);
 
-	printk(BIOS_DEBUG, "SRAT: sysmemmap addr: 0x%llx, BaseAddress: 0x%x, size: 0x%llx, "
-	       "ElementSize: 0x%x, type: %d, reserved: %d\n", addr, e->BaseAddress,
-	       size, e->ElementSize, e->Type, is_memtype_reserved(e->Type));
+	printk(BIOS_DEBUG, "     sysmemmap addr: 0x%llx, size: 0x%llx, "
+	       "type: %d, reserved: %d\n", addr, size, e->Type,
+	       is_memtype_reserved(e->Type));
 
 	/* skip reserved memory region */
 	if (is_memtype_reserved(e->Type))
@@ -122,9 +122,9 @@ static void acpi_fill_srat_memory(int *cnt, acpi_srat_mem_t *current,
 	}
 
 	if (!skip) {
-		printk(BIOS_DEBUG, "SRAT: adding memory %d entry length: %d, addr: 0x%x%x, "
-		       "length: 0x%x%x, proximity_domain: %d, flags: %x\n",
-		       *cnt, srat.length, srat.base_address_high, srat.base_address_low,
+		printk(BIOS_DEBUG, "SRAT: memory %d: addr=0x%x%08x, "
+		       "length=0x%x%08x, proximity_domain=%d, flags=%x\n",
+		       *cnt, srat.base_address_high, srat.base_address_low,
 		       srat.length_high, srat.length_low, srat.proximity_domain, srat.flags);
 
 		memcpy(current, &srat, sizeof(acpi_srat_mem_t));
@@ -365,6 +365,7 @@ static unsigned long acpi_create_drhd(unsigned long current, struct device *iomm
 
 static unsigned long acpi_create_atsr(unsigned long current)
 {
+	struct device *domain = NULL;
 	struct device *child, *dev;
 	struct resource *resource;
 
@@ -381,8 +382,14 @@ static unsigned long acpi_create_atsr(unsigned long current)
 		unsigned long tmp = current;
 		bool first = true;
 
-		dev = NULL;
-		while ((dev = dev_find_device(PCI_VID_INTEL, MMAP_VTD_CFG_REG_DEVID, dev))) {
+		/* Early Xeon-SP have different PCI IDs for the VTD device on CSTACK vs PSTACK.
+		 * Iterate over PCI domains and then look for the VTD PCI device. */
+		while ((domain = dev_find_path(domain, DEVICE_PATH_DOMAIN))) {
+			dev = pcidev_path_behind(domain->downstream,
+						 PCI_DEVFN(VTD_DEV_NUM, VTD_FUNC_NUM));
+			assert(dev);
+			if (!dev)
+				continue;
 			/* Only add devices for the current socket */
 			if (iio_pci_domain_socket_from_dev(dev) != socket)
 				continue;
@@ -429,10 +436,18 @@ static unsigned long acpi_create_rmrr(unsigned long current)
 
 static unsigned long acpi_create_rhsa(unsigned long current)
 {
-	struct device *dev = NULL;
+	struct device *domain = NULL;
 	struct resource *resource;
+	struct device *dev;
 
-	while ((dev = dev_find_device(PCI_VID_INTEL, MMAP_VTD_CFG_REG_DEVID, dev))) {
+	/* Early Xeon-SP have different PCI IDs for the VTD device on CSTACK vs PSTACK.
+	 * Iterate over PCI domains and then look for the VTD PCI device. */
+	while ((domain = dev_find_path(domain, DEVICE_PATH_DOMAIN))) {
+		dev = pcidev_path_behind(domain->downstream,
+					 PCI_DEVFN(VTD_DEV_NUM, VTD_FUNC_NUM));
+		assert(dev);
+		if (!dev)
+			continue;
 		/* See if there is a resource with the appropriate index. */
 		resource = probe_resource(dev, VTD_BAR_CSR);
 		if (!resource)
@@ -515,15 +530,25 @@ static unsigned long acpi_fill_dmar(unsigned long current)
 	const IIO_UDS *hob = get_iio_uds();
 
 	// DRHD - iommu0 must be the last DRHD entry.
-	struct device *dev = NULL;
+	struct device *domain = NULL;
 	struct device *iommu0 = NULL;
-	while ((dev = dev_find_device(PCI_VID_INTEL, MMAP_VTD_CFG_REG_DEVID, dev))) {
+	struct device *dev;
+
+	/* Early Xeon-SP have different PCI IDs for the VTD device on CSTACK vs PSTACK.
+	 * Iterate over PCI domains and then look for the VTD PCI device. */
+	while ((domain = dev_find_path(domain, DEVICE_PATH_DOMAIN))) {
+		dev = pcidev_path_behind(domain->downstream,
+					 PCI_DEVFN(VTD_DEV_NUM, VTD_FUNC_NUM));
+		assert(dev);
+		if (!dev)
+			continue;
 		if (is_dev_on_domain0(dev)) {
 			iommu0 = dev;
 			continue;
 		}
 		current = acpi_create_drhd(current, dev, hob);
 	}
+
 	assert(iommu0);
 	current = acpi_create_drhd(current, iommu0, hob);
 
