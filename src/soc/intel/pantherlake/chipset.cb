@@ -90,7 +90,7 @@ chip soc/intel/pantherlake
 		device pci 10.1 alias thc1 off end
 		device pci 12.0 alias ish off end
 		device pci 12.1 alias p2sb2 hidden end
-		device pci 12.6 alias gspi2 off end
+		device pci 12.6 alias gspi0a off end
 		device pci 13.0 alias heci_1 off end
 		device pci 13.1 alias heci_2 off end
 		device pci 13.2 alias heci_3 off end
@@ -143,6 +143,7 @@ chip soc/intel/pantherlake
 		device pci 16.1 alias heci2 off end
 		device pci 16.4 alias heci3 off end
 		device pci 16.5 alias heci4 off end
+		device pci 17.0 alias ufs off end
 		device pci 18.0 alias eheci1 off end
 		device pci 18.1 alias eheci2 off end
 		device pci 18.2 alias eheci3 off end

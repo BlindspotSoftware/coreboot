@@ -7,6 +7,7 @@ config SOC_MEDIATEK_MT8196
 	select ARCH_VERSTAGE_ARMV8_64
 	select ARCH_ROMSTAGE_ARMV8_64
 	select ARCH_RAMSTAGE_ARMV8_64
+	select ARM64_USE_ARM_TRUSTED_FIRMWARE
 	select HAVE_UART_SPECIAL
 	select CACHE_MRC_SETTINGS
 	select MEDIATEK_DRAM_BLOB_FAST_INIT
@@ -26,4 +27,27 @@ config VBOOT
 	select VBOOT_RETURN_FROM_VERSTAGE
 	select VBOOT_DEFINE_WIDEVINE_COUNTERS
 
+config DPM_DM_FIRMWARE
+	string
+	default "dpm.dm"
+	help
+	  The file name of the MediaTek DPM DM firmware.
+
+config DPM_PM_FIRMWARE
+	string
+	default "dpm.pm"
+	help
+	  The file name of the MediaTek DPM PM firmware.
+
+config SSPM_FIRMWARE
+	string
+	default "sspm.bin"
+	help
+	  The file name of the MediaTek SSPM firmware.
+
+config SPM_FIRMWARE
+	string
+	default "spm_firmware.pm"
+	help
+	  The file name of the MediaTek SPM firmware.
 endif
