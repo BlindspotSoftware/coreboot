@@ -5,7 +5,7 @@ defaults:
   transport: &transport
     proto: ssh
     options:
-      host: "[[.Host]]"
+      host: "[[attributes.Host]]"
       user: root
       identity_file: /root/.ssh/fwci
 
