@@ -24,13 +24,11 @@ jobs:
       with:
         name: coreboot.rom
         path: ./build/coreboot.rom
-    - uses: docker://firmwareci/uploader:v2.0
+    - uses: docker://firmwareci/action:v3.0
       with:
         EMAIL: ${{ secrets.EMAIL }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        PROJECT_ID:   01J0MXWP8B1NQVMATY60JSWW4B
+        WORKFLOW_ID:   01J0MXWP8B1NQVMATY60JSWW4B
         COMMIT_HASH: ${{ github.sha }}
-        BINARY_PATH: ./build/coreboot.rom
-        PROTOCOL: local
-        API: https://api.firmwareci.9esec.dev:8443
+        URI: ./build/coreboot.rom
       if: github.event_name != 'pull_request'
