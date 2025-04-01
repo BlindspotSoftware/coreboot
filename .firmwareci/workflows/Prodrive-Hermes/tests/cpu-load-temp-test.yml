@@ -12,14 +12,6 @@ defaults:
 stages:
   - name: Stress Test
     steps:
-      - cmd: copy
-        name: Copy tooling to DUT
-        transport: *transport
-        parameters:
-          source: "[[storage.system_suite]]/system-suite"
-          destination: /tmp/system-suite
-          recursive: true
-
       - cmd: cmd
         name: Cooldown before Stress Test
         transport: *transport
@@ -41,7 +33,6 @@ stages:
         options:
           timeout: 30m
         parameters:
-          tool_path: /tmp/system-suite
           args: [--ignite-cpu]
           duration: 20m
 
