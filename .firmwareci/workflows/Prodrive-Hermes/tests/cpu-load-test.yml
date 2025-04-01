@@ -10,16 +10,6 @@ defaults:
       identity_file: /root/.ssh/fwci
 
 stages:
-  - name: Toggle CPU CPUs
-    steps:
-      - cmd: copy
-        name: Copy tooling to DUT
-        transport: *transport
-        parameters:
-          source: "[[storage.system_suite]]/system-suite"
-          destination: /tmp/system-suite
-          recursive: true
-
   - name: Stress Test
     steps:
       - cmd: cpuload
@@ -28,6 +18,5 @@ stages:
         options:
           timeout: 20m
         parameters:
-          tool_path: /tmp/system-suite
           args: [--ignite-cpu]
           duration: 10m
