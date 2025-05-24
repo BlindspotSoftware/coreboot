@@ -10,6 +10,7 @@ all-y += ../common/timer_prepare.c timer.c
 all-y += ../common/uart.c
 
 bootblock-y += bootblock.c
+bootblock-y += efuse.c
 bootblock-y += ../common/mmu_operations.c
 bootblock-y += ../common/mtcmos.c mtcmos.c
 bootblock-y += ../common/pll.c pll.c
@@ -33,7 +34,7 @@ ramstage-$(CONFIG_ARM64_USE_ARM_TRUSTED_FIRMWARE) += ../common/bl31.c
 ramstage-y += ../common/dpm.c ../common/dpm_v2.c
 ramstage-y += ../common/dramc_info.c
 ramstage-y += ../common/emi.c
-ramstage-y += ../common/mcu.c
+ramstage-y += ../common/mcu.c mcupm.c
 ramstage-y += ../common/memory.c
 ramstage-y += ../common/mmu_operations.c ../common/mmu_cmops.c
 ramstage-y += ../common/mt6315.c mt6315.c
@@ -44,6 +45,8 @@ ramstage-y += ../common/pmif_spi.c pmif_spi.c
 ramstage-y += ../common/pmif_spmi.c pmif_spmi.c
 ramstage-y += ../common/rtc.c ../common/rtc_mt6359p.c ../common/rtc_osc_init.c
 ramstage-y += soc.c
+ramstage-y += ../common/spm.c ../common/spm_v2.c spm.c
+ramstage-y += ../common/sspm.c ../common/sspm_sram.c
 ramstage-y += ../common/usb.c usb.c
 
 BL31_MAKEARGS += PLAT=mt8189
@@ -55,7 +58,10 @@ MT8189_BLOB_DIR := 3rdparty/blobs/soc/mediatek/mt8189
 
 firmware-files := \
 	$(CONFIG_DPM_DM_FIRMWARE) \
-	$(CONFIG_DPM_PM_FIRMWARE)
+	$(CONFIG_DPM_PM_FIRMWARE) \
+	$(CONFIG_MCUPM_FIRMWARE) \
+	$(CONFIG_SPM_FIRMWARE) \
+	$(CONFIG_SSPM_FIRMWARE)
 
 $(foreach fw, $(call strip_quotes,$(firmware-files)), \
 	$(eval $(fw)-file := $(MT8189_BLOB_DIR)/$(fw)) \

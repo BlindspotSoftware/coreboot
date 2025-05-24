@@ -5,7 +5,9 @@
 #include <boardid.h>
 #include <console/console.h>
 #include <delay.h>
+#include <drivers/intel/gma/opregion.h>
 #include <fw_config.h>
+#include <gpio.h>
 #include <sar.h>
 #include <soc/bootblock.h>
 #include <stdlib.h>
@@ -61,11 +63,11 @@ static const struct pad_config ish_uart0_disable_pads[] = {
 static const struct pad_config switch_ish_uart1_pads[] = {
 	/* D13  : UART0_ISH_RXD ==> NC  */
 	PAD_NC(GPP_D13, NONE),
-	/* D14  : UART0_ISH_TXD ==> LCD_CBL_DET# */
-	PAD_CFG_GPO(GPP_D14, 1, DEEP),
+	/* D14  : UART0_ISH_TXD ==> NC */
+	PAD_NC(GPP_D14, NONE),
 	/* D17 : NC ==> UART1_ISH_RDX */
 	PAD_CFG_NF(GPP_D17, NONE, DEEP, NF2),
-	/* D18 : LCD_CBL_DET# ==> UART1_ISH_TDX */
+	/* D18 : NC ==> UART1_ISH_TDX */
 	PAD_CFG_NF(GPP_D18, NONE, DEEP, NF2),
 };
 
@@ -170,6 +172,21 @@ void variant_update_descriptor(void)
 		printk(BIOS_INFO, "Configuring descriptor for FIVR\n");
 		configure_descriptor(fivr_bytes, ARRAY_SIZE(fivr_bytes));
 	}
+}
+
+const char *mainboard_vbt_filename(void)
+{
+	/*
+	 * GPP_E13 High -> One RAM Chip
+	 * GPP_E13 Low  -> Two RAM Chips
+	 */
+	if (gpio_get(GPP_E13)) {
+		printk(BIOS_INFO,
+			"x32 memory detected, so use vbt-uldrenite_x32mem.bin\n");
+		return "vbt-uldrenite_x32mem.bin";
+	}
+	printk(BIOS_INFO, "Non-x32 memory detected, so use vbt.bin\n");
+	return "vbt.bin";
 }
 
 void variant_configure_pads(void)

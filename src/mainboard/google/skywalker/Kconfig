@@ -2,7 +2,8 @@
 
 # Umbrella option to be selected by variant boards.
 config BOARD_GOOGLE_SKYWALKER_COMMON
-	def_bool BOARD_GOOGLE_OBIWAN || \
+	def_bool BOARD_GOOGLE_ANAKIN || \
+		 BOARD_GOOGLE_OBIWAN || \
 		 BOARD_GOOGLE_SKYWALKER || \
 		 BOARD_GOOGLE_YODA
 
@@ -11,8 +12,6 @@ if BOARD_GOOGLE_SKYWALKER_COMMON
 config VBOOT
 	select EC_GOOGLE_CHROMEEC_SWITCHES
 	select VBOOT_VBNV_FLASH
-	select VBOOT_NO_BOARD_SUPPORT
-	select VBOOT_MOCK_SECDATA
 
 config BOARD_SPECIFIC_OPTIONS
 	def_bool y
@@ -26,6 +25,9 @@ config BOARD_SPECIFIC_OPTIONS
 	select EC_GOOGLE_CHROMEEC
 	select EC_GOOGLE_CHROMEEC_BOARDID
 	select EC_GOOGLE_CHROMEEC_SPI
+	select I2C_TPM if VBOOT
+	select MAINBOARD_HAS_TPM2 if VBOOT
+	select TPM_GOOGLE_TI50 if VBOOT
 	select FW_CONFIG
 	select FW_CONFIG_SOURCE_CHROMEEC_CBI
 	select RTC
@@ -36,6 +38,7 @@ config MAINBOARD_DIR
 
 config MAINBOARD_PART_NUMBER
 	string
+	default "Anakin" if BOARD_GOOGLE_ANAKIN
 	default "Obiwan" if BOARD_GOOGLE_OBIWAN
 	default "Skywalker" if BOARD_GOOGLE_SKYWALKER
 	default "Yoda" if BOARD_GOOGLE_YODA
@@ -47,5 +50,13 @@ config BOOT_DEVICE_SPI_FLASH_BUS
 config EC_GOOGLE_CHROMEEC_SPI_BUS
 	hex
 	default 0x0
+
+config DRIVER_TPM_I2C_BUS
+	hex
+	default 0x3
+
+config DRIVER_TPM_I2C_ADDR
+	hex
+	default 0x50
 
 endif
