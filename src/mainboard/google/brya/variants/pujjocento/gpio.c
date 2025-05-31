@@ -66,9 +66,9 @@ static const struct pad_config gpio_table[] = {
 	/* B6  : GPP_B6 ==> ISH_I2C0_SENSOR_SDA */
 	PAD_CFG_NF_IOSTANDBY_IGNORE(GPP_B6, NONE, DEEP, NF1),
 	/* B7  : I2C3_SDA ==> SOC_I2C_SAR_SDA */
-	PAD_CFG_NF_LOCK(GPP_B7, NONE, NF2, LOCK_CONFIG),
+	PAD_CFG_NF(GPP_B7, NONE, DEEP, NF2),
 	/* B8  : I2C3_SCL ==> SOC_I2C_SAR_SCL */
-	PAD_CFG_NF_LOCK(GPP_B8, NONE, NF2, LOCK_CONFIG),
+	PAD_CFG_NF(GPP_B8, NONE, DEEP, NF2),
 	/* B9  : Not available */
 	PAD_NC(GPP_B9, NONE),
 	/* B10 : Not available */
@@ -314,9 +314,9 @@ static const struct pad_config gpio_table[] = {
 	/* R3 : HDA_SDI0 ==> HDA_SDIN0 */
 	PAD_CFG_NF(GPP_R3, NONE, DEEP, NF1),
 	/* R4 : HDA_RST# ==> HDA_RST# */
-	PAD_CFG_NF(GPP_R4, NONE, DEEP, NF1),
+	PAD_CFG_NF(GPP_R4, NONE, DEEP, NF3),
 	/* R5 : HDA_SDI1 ==> HDA_SDIN1 */
-	PAD_CFG_NF(GPP_R5, NONE, DEEP, NF1),
+	PAD_CFG_NF(GPP_R5, NONE, DEEP, NF3),
 	/* R6 : DMIC_CLK_A_1A ==> DMIC_WCAM_CLK_R */
 	PAD_CFG_NF(GPP_R6, NONE, DEEP, NF3),
 	/* R7 : DMIC_DATA_1A ==> DMIC_WCAM_DATA */

@@ -36,4 +36,22 @@ config DPM_PM_FIRMWARE
 	help
 	  The file name of the MediaTek DPM PM firmware.
 
+config MCUPM_FIRMWARE
+	string
+	default "mcupm.bin"
+	help
+	  The file name of the MediaTek MCUPM firmware.
+
+config SPM_FIRMWARE
+	string
+	default "spm_firmware.bin"
+	help
+	  The file name of the MediaTek SPM firmware.
+
+config SSPM_FIRMWARE
+	string
+	default "sspm.bin"
+	help
+	  The file name of the MediaTek SSPM firmware.
+
 endif

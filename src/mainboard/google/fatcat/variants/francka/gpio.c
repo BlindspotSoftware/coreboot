@@ -172,13 +172,13 @@ static const struct pad_config gpio_table[] = {
 	/* GPP_D09:     PCH_DGPU_HOLD_RST#_R */
 	PAD_NC(GPP_D09, NONE),
 	/* GPP_D10:     HDA_BIT_CLK */
-	PAD_CFG_NF(GPP_D10, NONE, DEEP, NF1),
+	PAD_NC(GPP_D10, NONE),
 	/* GPP_D11:     HDA_SYNC */
-	PAD_CFG_NF(GPP_D11, NONE, DEEP, NF1),
+	PAD_NC(GPP_D11, NONE),
 	/* GPP_D12:     HDA_SDOUT */
-	PAD_CFG_NF(GPP_D12, NONE, DEEP, NF1),
+	PAD_NC(GPP_D12, NONE),
 	/* GPP_D13:     HDA_SDIN0 */
-	PAD_CFG_NF(GPP_D13, NONE, DEEP, NF1),
+	PAD_NC(GPP_D13, NONE),
 	/* GPP_D14:     SOC_HDMI_STRAP */
 	PAD_CFG_GPI(GPP_D14, NONE, DEEP),
 	/* GPP_D15:     Not used */
@@ -272,8 +272,8 @@ static const struct pad_config gpio_table[] = {
 	PAD_NC(GPP_F07, NONE),
 	/* GPP_F08:     Not used */
 	PAD_NC(GPP_F08, NONE),
-	/* GPP_F09:     SX_EXIT_HOLDOFF# */
-	PAD_CFG_NF(GPP_F09, NONE, DEEP, NF2),
+	/* GPP_F09:     Not used */
+	PAD_NC(GPP_F09, NONE),
 	/* GPP_F10:     Not used */
 	PAD_NC(GPP_F10, NONE),
 	/* GPP_F11:     SOC_THC_1_CLK */
@@ -344,21 +344,21 @@ static const struct pad_config gpio_table[] = {
 	/* GPP_H22:     SOC_I2C_1_SCL */
 	PAD_CFG_NF(GPP_H22, NONE, DEEP, NF1),
 
-	/* GPP_S00:     Not used */
+	/* GPP_S00:     SNDW_3_SCL */
 	PAD_NC(GPP_S00, NONE),
-	/* GPP_S01:     Not used */
+	/* GPP_S01:     SNDW_3_SDA */
 	PAD_NC(GPP_S01, NONE),
-	/* GPP_S02:     Not used */
+	/* GPP_S02:     SNDW_0_SCL_R / SOC_DMIC_CLK0 */
 	PAD_NC(GPP_S02, NONE),
-	/* GPP_S03:     Not used */
+	/* GPP_S03:     SNDW_0_SDA_R / SOC_DMIC_DATA0 */
 	PAD_NC(GPP_S03, NONE),
-	/* GPP_S04:     Not used */
+	/* GPP_S04:     SNDW_2_SCL */
 	PAD_NC(GPP_S04, NONE),
-	/* GPP_S05:     Not used */
+	/* GPP_S05:     SNDW_2_SDA */
 	PAD_NC(GPP_S05, NONE),
-	/* GPP_S06:     Not used */
+	/* GPP_S06:     SOC_DMIC_CLK1 */
 	PAD_NC(GPP_S06, NONE),
-	/* GPP_S07:     Not used */
+	/* GPP_S07:     SOC_DMIC_DATA1 */
 	PAD_NC(GPP_S07, NONE),
 
 	/* GPP_V00:     PM_BATLOW# */
