@@ -20,10 +20,6 @@ static const struct pad_config hda_enable_pads[] = {
 	PAD_CFG_NF(GPP_D12, NATIVE, DEEP, NF1),
 	/* HDA_SDI_0 */
 	PAD_CFG_NF(GPP_D13, NATIVE, DEEP, NF1),
-	/* HDA_RST_B */
-	PAD_CFG_NF(GPP_D16, NONE, DEEP, NF1),
-	/* HDA_SDI_1 */
-	PAD_CFG_NF(GPP_D17, NATIVE, DEEP, NF1),
 
 	/* DMIC_CLK */
 	PAD_CFG_NF(GPP_S04, NONE, DEEP, NF5),
@@ -86,11 +82,6 @@ static const struct pad_config sndw_alc721_enable_pads[] = {
 	PAD_CFG_NF(GPP_S06, NONE, DEEP, NF3),
 	/* SNDW1_DATA  */
 	PAD_CFG_NF(GPP_S07, NONE, DEEP, NF3),
-
-	/* DMIC_CLK */
-	PAD_CFG_NF(GPP_D16, NONE, DEEP, NF3),
-	/* DMIC_DATA */
-	PAD_CFG_NF(GPP_D17, NONE, DEEP, NF3),
 };
 
 static const struct pad_config audio_disable_pads[] = {
@@ -107,8 +98,6 @@ static const struct pad_config audio_disable_pads[] = {
 	PAD_NC(GPP_D11, NONE),
 	PAD_NC(GPP_D12, NONE),
 	PAD_NC(GPP_D13, NONE),
-	PAD_NC(GPP_D16, NONE),
-	PAD_NC(GPP_D17, NONE),
 };
 
 static const struct pad_config x1slot_pads[] = {
@@ -116,8 +105,6 @@ static const struct pad_config x1slot_pads[] = {
 	PAD_CFG_GPO(GPP_A08, 1, PLTRST),
 	/* GPP_D19:     X1_DT_PCIE_RST_N */
 	PAD_CFG_GPO(GPP_D19, 1, PLTRST),
-	/* GPP_B25:     X1_SLOT_WAKE_N */
-	PAD_CFG_GPI_SCI_LOW(GPP_B25, NONE, DEEP, LEVEL),
 };
 
 static const struct pad_config x1slot_disable_pads[] = {
@@ -125,8 +112,6 @@ static const struct pad_config x1slot_disable_pads[] = {
 	PAD_CFG_GPO(GPP_A08, 0, PLTRST),
 	/* GPP_D19:     X1_DT_PCIE_RST_N */
 	PAD_NC(GPP_D19, NONE),
-	/* GPP_B25:     X1_SLOT_WAKE_N */
-	PAD_NC(GPP_B25, NONE)
 };
 
 /*
@@ -138,8 +123,8 @@ static const struct pad_config x1slot_disable_pads[] = {
  * at much later time and time between RST# and PERSET# is guaranteed.
  */
 static const struct pad_config pre_mem_wwan_pwr_seq1_pads[] = {
-	/* GPP_H16:     WWAN_PWREN */
-	PAD_CFG_GPO(GPP_H16, 1, PLTRST),
+	/* GPP_E01:     EN_WWAN_PWR */
+	PAD_CFG_GPO(GPP_E01, 1, PLTRST),
 	/* GPP_A09:  M.2_WWAN_FCP_OFF_N */
 	PAD_CFG_GPO(GPP_A09, 0, PLTRST),
 	/* GPP_B20:     M.2_WWAN_RST_N */
@@ -169,8 +154,8 @@ static const struct pad_config wwan_disable_pads[] = {
 	PAD_NC(GPP_D03, NONE),
 	/* GPP_B20:     M.2_WWAN_RST_N */
 	PAD_NC(GPP_B20, NONE),
-	/* GPP_H16:     WWAN_PWREN */
-	PAD_NC(GPP_H16, NONE),
+	/* GPP_E01:     EN_WWAN_PWR */
+	PAD_NC(GPP_E01, NONE),
 	/* GPP_A10:     M.2_WWAN_DISABLE_N */
 	PAD_NC(GPP_A10, NONE),
 	/* GPP_E02:     WWAN_WAKE_GPIO_N */
@@ -179,33 +164,20 @@ static const struct pad_config wwan_disable_pads[] = {
 
 /* Gen4 NVME: at the top M.2 slot */
 static const struct pad_config pre_mem_gen4_ssd_pwr_pads[] = {
-	/* GPP_B10:     GEN4_SSD_PWREN */
-	PAD_CFG_GPO(GPP_B10, 0, PLTRST),
+	/* GPP_H18:     EN_PP3300_SSD */
+	PAD_CFG_GPO(GPP_H18, 0, PLTRST),
 };
 
 static const struct pad_config gen4_ssd_pads[] = {
-	/* GPP_B10:     GEN4_SSD_PWREN */
-	PAD_CFG_GPO(GPP_B10, 1, PLTRST),
-	/* GPP_B09:     M2_GEN4_SSD_RESET_N */
-	PAD_CFG_GPO(GPP_B09, 1, PLTRST),
+	/* GPP_B10:     EN_PP3300_SSD */
+	PAD_CFG_GPO(GPP_H18, 1, PLTRST),
+	/* GPP_B09:     SSD_PERST_L */
+	PAD_CFG_GPO(GPP_A08, 1, PLTRST),
 };
 
 static const struct pad_config ufs_enable_pads[] = {
 	/* GPP_D21:     GPP_D21_UFS_REFCLK */
 	PAD_CFG_NF(GPP_D21, NONE, DEEP, NF1),
-};
-
-/* Gen5 NVME: at the bottom M.2 slot */
-static const struct pad_config pre_mem_gen5_ssd_pwr_pads[] = {
-	/* GPP_B16:     GEN5_SSD_PWREN */
-	PAD_CFG_GPO(GPP_B16, 0, PLTRST),
-};
-
-static const struct pad_config gen5_ssd_pads[] = {
-	/* GPP_B16:     GEN5_SSD_PWREN */
-	PAD_CFG_GPO(GPP_B16, 1, PLTRST),
-	/* GPP_E03:     M2_GEN5_SSD_RESET_N */
-	PAD_CFG_GPO(GPP_E03, 1, PLTRST),
 };
 
 static const struct pad_config peg_x4slot_wake_disable_pads[] = {
@@ -459,11 +431,8 @@ void fw_config_configure_pre_mem_gpio(void)
 
 	if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_NVME_GEN4))) {
 		GPIO_CONFIGURE_PADS(pre_mem_gen4_ssd_pwr_pads);
-	} else if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_NVME_GEN5))) {
-		GPIO_CONFIGURE_PADS(pre_mem_gen5_ssd_pwr_pads);
 	} else if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_UNKNOWN))) {
 		GPIO_CONFIGURE_PADS(pre_mem_gen4_ssd_pwr_pads);
-		GPIO_CONFIGURE_PADS(pre_mem_gen5_ssd_pwr_pads);
 	}
 
 	/*
@@ -495,13 +464,10 @@ void fw_config_gpio_padbased_override(struct pad_config *padbased_table)
 
 	if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_NVME_GEN4))) {
 		GPIO_PADBASED_OVERRIDE(padbased_table, gen4_ssd_pads);
-	} else if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_NVME_GEN5))) {
-		GPIO_PADBASED_OVERRIDE(padbased_table, gen5_ssd_pads);
 	} else if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_UFS))) {
 		GPIO_PADBASED_OVERRIDE(padbased_table, ufs_enable_pads);
 	} else if (fw_config_probe(FW_CONFIG(STORAGE, STORAGE_UNKNOWN))) {
 		GPIO_PADBASED_OVERRIDE(padbased_table, gen4_ssd_pads);
-		GPIO_PADBASED_OVERRIDE(padbased_table, gen5_ssd_pads);
 		GPIO_PADBASED_OVERRIDE(padbased_table, ufs_enable_pads);
 	}
 
