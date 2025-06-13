@@ -24,10 +24,9 @@ jobs:
       with:
         name: coreboot.rom
         path: ./build/coreboot.rom
-    - uses: docker://firmwareci/action:v3.0
+    - uses: docker://firmwareci/action:v4.0
       with:
-        EMAIL: ${{ secrets.EMAIL }}
-        PASSWORD: ${{ secrets.PASSWORD }}
+        TOKEN: ${{ secrets.TOKEN }}
         WORKFLOW_ID:   01J0MXWP8B1NQVMATY60JSWW4B
         COMMIT_HASH: ${{ github.sha }}
         URI: ./build/coreboot.rom
