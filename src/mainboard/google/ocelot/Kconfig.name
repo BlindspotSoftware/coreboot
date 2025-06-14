@@ -4,3 +4,9 @@ comment "Ocelot"
 
 config BOARD_GOOGLE_OCELOT
 	bool "-> Ocelot"
+
+config BOARD_GOOGLE_OCELOTITE
+	bool "-> Ocelotite"
+
+config BOARD_GOOGLE_OCELOTMCHP
+	bool "-> Ocelotmchp"
