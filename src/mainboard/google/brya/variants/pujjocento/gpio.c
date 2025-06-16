@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
-#include <baseboard/gpio.h>
+#include <variant/gpio.h>
 #include <baseboard/variants.h>
 #include <soc/gpio.h>
 #include <types.h>
@@ -38,12 +38,12 @@ static const struct pad_config gpio_table[] = {
 	PAD_NC_LOCK(GPP_A16, NONE, LOCK_CONFIG),
 	/* A17 : NC */
 	PAD_NC(GPP_A17, NONE),
-	/* A18 : NC */
-	PAD_NC(GPP_A18, NONE),
+	/* A18 : NC ==> HDMI_HPD_SRC*/
+	PAD_CFG_NF(GPP_A18, NONE, DEEP, NF1),
 	/* A19 : NC */
 	PAD_NC(GPP_A19, NONE),
-	/* A20 : DDSP_HPD2 ==> SOC_HDMI_HPD */
-	PAD_CFG_NF(GPP_A20, NONE, DEEP, NF1),
+	/* A20 : DDSP_HPD2 ==> NC */
+	PAD_NC(GPP_A20, NONE),
 	/* A21 : GPP_A21 ==> USB_C1_AUX_DC_P */
 	PAD_CFG_NF(GPP_A21, NONE, DEEP, NF6),
 	/* A22 : GPP_A22 ==> USB_C1_AUX_DC_N */
@@ -66,9 +66,9 @@ static const struct pad_config gpio_table[] = {
 	/* B6  : GPP_B6 ==> ISH_I2C0_SENSOR_SDA */
 	PAD_CFG_NF_IOSTANDBY_IGNORE(GPP_B6, NONE, DEEP, NF1),
 	/* B7  : I2C3_SDA ==> SOC_I2C_SAR_SDA */
-	PAD_CFG_NF_LOCK(GPP_B7, NONE, NF2, LOCK_CONFIG),
+	PAD_CFG_NF(GPP_B7, NONE, DEEP, NF2),
 	/* B8  : I2C3_SCL ==> SOC_I2C_SAR_SCL */
-	PAD_CFG_NF_LOCK(GPP_B8, NONE, NF2, LOCK_CONFIG),
+	PAD_CFG_NF(GPP_B8, NONE, DEEP, NF2),
 	/* B9  : Not available */
 	PAD_NC(GPP_B9, NONE),
 	/* B10 : Not available */
@@ -198,10 +198,10 @@ static const struct pad_config gpio_table[] = {
 	PAD_NC(GPP_E18, NONE),
 	/* E19 : DDP1_CTRLDATA ==> GPP_E19_STRAP */
 	PAD_NC(GPP_E19, NONE),
-	/* E20 : DDP2_CTRLCLK ==> HDMI_DDC_SCL */
-	PAD_CFG_NF(GPP_E20, NONE, DEEP, NF1),
-	/* E21 : DDP2_CTRLDATA ==> HDMI_DDC_SDA_STRAP */
-	PAD_CFG_NF(GPP_E21, NONE, DEEP, NF1),
+	/* E20 : DDP2_CTRLCLK ==> NC */
+	PAD_NC(GPP_E20, NONE),
+	/* E21 : DDP2_CTRLDATA ==> NC */
+	PAD_NC(GPP_E21, NONE),
 	/* E22 : DDPA_CTRLCLK ==> USB_C0_AUX_DC_P */
 	PAD_CFG_NF(GPP_E22, NONE, DEEP, NF6),
 	/* E23 : DDPA_CTRLDATA ==> USB_C0_AUX_DC_N */
@@ -314,9 +314,9 @@ static const struct pad_config gpio_table[] = {
 	/* R3 : HDA_SDI0 ==> HDA_SDIN0 */
 	PAD_CFG_NF(GPP_R3, NONE, DEEP, NF1),
 	/* R4 : HDA_RST# ==> HDA_RST# */
-	PAD_CFG_NF(GPP_R4, NONE, DEEP, NF1),
+	PAD_CFG_NF(GPP_R4, NONE, DEEP, NF3),
 	/* R5 : HDA_SDI1 ==> HDA_SDIN1 */
-	PAD_CFG_NF(GPP_R5, NONE, DEEP, NF1),
+	PAD_CFG_NF(GPP_R5, NONE, DEEP, NF3),
 	/* R6 : DMIC_CLK_A_1A ==> DMIC_WCAM_CLK_R */
 	PAD_CFG_NF(GPP_R6, NONE, DEEP, NF3),
 	/* R7 : DMIC_DATA_1A ==> DMIC_WCAM_DATA */
@@ -451,7 +451,7 @@ static const struct pad_config early_gpio_table[] = {
 	/* H11 : UART0_TXD ==> UART_SOC_TX_DBG_RX */
 	PAD_CFG_NF(GPP_H11, NONE, DEEP, NF2),
 	/* E13 : THC0_SPI1_IO0 ==> SINGLE CHANNEL */
-	PAD_CFG_GPI(GPP_E13, NONE, DEEP),
+	PAD_CFG_GPI_LOCK(GPP_E13, NONE, LOCK_CONFIG),
 	/* H20 : IMGCLKOUT1 ==> WLAN_PERST_L */
 	PAD_CFG_GPO(GPP_H20, 0, DEEP),
 };

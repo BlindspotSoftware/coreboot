@@ -11,9 +11,6 @@
 
 #include "reg_structs.h"
 
-/** TODO (Angel): Remove this after in-review patches are submitted **/
-#define SPD_LEN SPD_SIZE_MAX_DDR3
-
 /* Each channel has 4 ranks, spread across 2 slots */
 #define NUM_SLOTRANKS		4
 
@@ -116,16 +113,6 @@ enum reut_cmd_pat {
 	PAT_RD_WR_TA,
 	PAT_WR_RD_TA,
 	PAT_ODT_TA,
-};
-
-/* REUT subsequence types (B = Base, O = Offset) */
-enum {
-	SUBSEQ_B_RD	= 0 << 22,
-	SUBSEQ_B_WR	= 1 << 22,
-	SUBSEQ_B_RD_WR	= 2 << 22,
-	SUBSEQ_B_WR_RD	= 3 << 22,
-	SUBSEQ_O_RD	= 4 << 22,
-	SUBSEQ_O_WR	= 5 << 22,
 };
 
 /* REUT mux control */
