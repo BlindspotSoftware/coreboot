@@ -19,9 +19,16 @@ stages:
           executable: cat
           args: ["/etc/os-release"]
 
-      - cmd: cmd
-        name: Power off device
+      - cmd: archive
+        name: Archive Firmware
         transport: *transport
         parameters:
-          executable: shutdown
-          args: ["now"]
+          path: "/etc/os-release"
+
+      - cmd: archive
+        name: Archive DMESG
+        transport:
+          proto: local
+        parameters:
+          path: "/etc/legal"
+          name: legal.notice

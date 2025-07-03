@@ -26,8 +26,8 @@ jobs:
         path: ./build/coreboot.rom
     - uses: docker://firmwareci/action:v4.0
       with:
-        TOKEN: ${{ secrets.TOKEN }}
+        TOKEN: ${{ secrets.FWCI_TOKEN }}
         WORKFLOW_ID:   01J0MXWP8B1NQVMATY60JSWW4B
-        COMMIT_HASH: ${{ github.sha }}
+        COMMIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
         URI: ./build/coreboot.rom
-      if: github.event_name != 'pull_request'
+        API: "https://api.firmwareci.9esec.dev:8444"
