@@ -28,6 +28,6 @@ jobs:
         with:
           TOKEN: ${{ secrets.TOKEN }}
           WORKFLOW_ID: 01J0MXWP8B1NQVMATY60JSWW4B
-          COMMIT_HASH: ${{ github.sha }}
+          COMMIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
           BINARIES: Binary=./build/coreboot.rom
         if: github.event_name != 'pull_request'

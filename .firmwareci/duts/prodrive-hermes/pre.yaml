@@ -11,7 +11,7 @@ pre-stage:
     parameters:
       host: "[[attributes.Pi]]"
       command: flash
-      args: [write, "[[defaults.Binary]]"]
+      args: [write, "[[input.Binary]]"]
 
   - cmd: sleep
     name: Wait for the DUT to settle

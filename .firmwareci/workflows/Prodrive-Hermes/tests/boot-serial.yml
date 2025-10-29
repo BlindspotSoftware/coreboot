@@ -20,9 +20,9 @@ pre-stage:
   - cmd: dutctl
     name: Flash the provided binary.
     parameters:
-      host: "[[attributes.Pi ]]"
+      host: "[[attributes.Pi]]"
       command: flash
-      args: [write, "[[defaults.Binary]]"]
+      args: [write, "[[input.Binary]]"]
 
   - cmd: sleep
     name: Wait for the DUT to settle
